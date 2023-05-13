@@ -1,12 +1,12 @@
 const User = require("../models/users.model");
 
 class UserController {
-  static findAll = async () => {
+  static findAll = async (req, res) => {
     try {
       const user = await User.find();
-      return user;
+      return res.status(200).json(user);
     } catch (error) {
-      throw new Error("Error to find all users", error.message);
+      return res.status(500).json("Error to find all users", error.message);
     }
   };
 }
