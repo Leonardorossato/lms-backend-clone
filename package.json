@@ -1,0 +1,9 @@
+{
+  "name": "lms-backend-clone",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "https://github.com/Leonardorossato/lms-backend-clone.git",
+  "author": "Leonardorossato <leonardorossato21@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
