@@ -6,14 +6,11 @@ class AuthController {
   static register = async (req, res) => {
     try {
       const email = req.body.email;
-      const user = await User.findOne({ email: email });
-      if (!user.email) {
-        throw new Error("Email not exist. Please try again");
-      }
+      await User.findOne({ email: email });
       const userCreate = await User.create(req.body);
-      return userCreate;
+      return res.status(201).json(userCreate);
     } catch (error) {
-      throw new Error("Error to create user: ", 404);
+      return res.status(400).json(error.message);
     }
   };
 }
