@@ -6,6 +6,9 @@
   "author": "Leonardorossato <leonardorossato21@gmail.com>",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "dev": "nodemon ./src/server.js"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
