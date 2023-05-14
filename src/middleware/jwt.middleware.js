@@ -12,13 +12,13 @@ const authMiddleware = async (req, res, next) => {
   if (req.headers.authorization.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
     try {
-      if (token) {
+      if (!token) {
+        return res.status(400).json({ message: "Access Denied. No token provided." });
+      } else {
         const decode = jwt.verify(token, jwtSecret);
-        const user = await User.findById(decode.id);
+        const user = await User.findById(decode._id);
         req.user = user;
         next();
-      } else {
-        return res.status(403).json("There is no token in header");
       }
     } catch (error) {
       return res
