@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-const validObjectId = (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return res.status(404).json({ message: "Invalid mongoose id" });
+const validObjectId = (id) => {
+  const isIdValid = mongoose.Types.ObjectId.isValid(id);
+  if (!isIdValid) {
+    console.log({ message: "Invalid mongoose id" });
   }
-  next();
 };
 
 module.exports = validObjectId;
