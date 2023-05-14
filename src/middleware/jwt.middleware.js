@@ -8,27 +8,23 @@ const generateToken = (id) => {
 };
 
 const authMiddleware = async (req, res, next) => {
-  try {
-    let token;
-    if (req.headers.authorization.startswith("Bearer")) {
-      token = req.headers.authorization.split(" ")[1];
-      try {
-        if (token) {
-          const decode = jwt.verify(token, jwtSecret);
-          const user = await User.findById(decode._id);
-          request.user = user;
-          next();
-        } else {
-          return res.status(403).json("There is no token in header");
-        }
-      } catch (error) {
-        return res
-          .status(400)
-          .json("Not Authorized, Please Login again", error.message);
+  let token;
+  if (req.headers.authorization.startsWith("Bearer")) {
+    token = req.headers.authorization.split(" ")[1];
+    try {
+      if (token) {
+        const decode = jwt.verify(token, jwtSecret);
+        const user = await User.findById(decode.id);
+        req.user = user;
+        next();
+      } else {
+        return res.status(403).json("There is no token in header");
       }
+    } catch (error) {
+      return res
+        .status(400)
+        .json("Not Authorized, Please Login again", error.message);
     }
-  } catch (error) {
-    return res.status(400).json("Invalid token", error.message);
   }
 };
 

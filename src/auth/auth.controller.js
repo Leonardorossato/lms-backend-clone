@@ -1,4 +1,4 @@
-const generateToken = require("../middleware/jwt.middleware");
+const { generateToken } = require("../middleware/jwt.middleware");
 const passwordMatchs = require("../middleware/password.match");
 const User = require("../models/users.model");
 
