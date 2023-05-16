@@ -27,20 +27,6 @@ class UserController {
         .json({ message: `Error while deleting this user id: ${id}` });
     }
   };
-
-  static blockedUser = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const user = await User.findByIdAndUpdate(
-        id,
-        { isBlocked: true },
-        { new: true }
-      );
-      return res.status(200).json({ message: "User blocked successfully." });
-    } catch (error) {
-      return res.status(404).json({ message: error.message });
-    }
-  };
 }
 
 module.exports = UserController;
