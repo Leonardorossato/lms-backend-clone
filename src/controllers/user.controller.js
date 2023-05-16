@@ -1,29 +1,11 @@
-const validObjectId = require("../middleware/validate.middleware");
 const User = require("../models/users.model");
-
+const asyncHandler = require("express-async-handler");
 class UserController {
-  static findAll = async (req, res) => {
-    try {
-      const user = await User.find();
-      return res.status(200).json(user);
-    } catch (error) {
-      return res.status(500).json("Error to find all users", error.message);
-    }
-  };
-
-  static findOne = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const user = await User.findById(id);
-      return res.status(200).json(user);
-    } catch (error) {
-      return res.status(404).json("User not exist in Database", error.message);
-    }
-  };
-
   static update = async (req, res) => {
     try {
-      const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true })
+      const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+      })
         .select("-password")
         .lean();
       if (!user) {
@@ -43,6 +25,20 @@ class UserController {
       return res
         .status(500)
         .json({ message: `Error while deleting this user id: ${id}` });
+    }
+  };
+
+  static blockedUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const user = await User.findByIdAndUpdate(
+        id,
+        { isBlocked: true },
+        { new: true }
+      );
+      return res.status(200).json({ message: "User blocked successfully." });
+    } catch (error) {
+      return res.status(404).json({ message: error.message });
     }
   };
 }
