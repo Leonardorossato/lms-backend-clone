@@ -4,9 +4,8 @@ const { authMiddleware } = require("../middleware/jwt.middleware");
 const validObjectId = require("../middleware/validate.middleware");
 const router = express.Router();
 
-router.get("/all", UserController.findAll);
-router.get("/:id", UserController.findOne);
 router.put("/update/:id", authMiddleware, validObjectId, UserController.update);
+router.put("/block/:id", authMiddleware, validObjectId, UserController.update);
 router.delete(
   "/delete/:id",
   validObjectId,
