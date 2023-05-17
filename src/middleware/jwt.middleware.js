@@ -19,16 +19,14 @@ const authenticationTokenUser = async (req, res, next) => {
   if (req.headers.authorization.startsWith("Bearer ")) {
     token = req.headers.authorization.split(" ")[1];
     try {
-      if (token) {
-        const decode = jwt.verify(token, jwtSecret);
-        const user = await User.findOne({ id: decode._id });
-        req.user = user;
-        return next();
-      } else {
-        return res
-          .status(400)
-          .json({ message: "Access Denied. No token provided." });
-      }
+      jwt.verify(token, jwtSecret, (err, validateToken) => {
+        if (err) {
+          res.status(400).json({ message: "Invalid token" });
+        } else {
+          req.user = validateToken;
+        }
+        next();
+      });
     } catch (error) {
       return res.status(400).json("Not Authorized, Please Login again");
     }
@@ -38,18 +36,16 @@ const authenticationTokenUser = async (req, res, next) => {
 const authenticationTokenAdmin = async (req, res, next) => {
   let token;
   if (req?.headers?.authorization?.startsWith("Bearer ")) {
-    token = req?.headers?.authorization?.split(" ")[1];
+    token = req.headers.authorization.split(" ")[1];
     try {
-      if (token) {
-        const decode = jwt.verify(token, jwtSecret);
-        const user = await User.findOne({ id: decode._id });
-        req.user = user;
-        return next();
-      } else {
-        return res
-          .status(400)
-          .json({ message: "Access Denied. No token provided." });
-      }
+      jwt.verify(token, jwtSecret, (err, validateToken) => {
+        if (err) {
+          res.status(400).json({ message: "Invalid token" });
+        } else {
+          req.user = validateToken;
+        }
+        next();
+      });
     } catch (error) {
       return res.status(400).json("Not Authorized, Please Login again");
     }

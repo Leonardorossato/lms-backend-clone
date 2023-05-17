@@ -10,17 +10,12 @@ router.put(
   validObjectId,
   UserController.update
 );
-router.put(
-  "/block/:id",
-  authenticationTokenUser,
-  validObjectId,
-  UserController.update
-);
+
 router.put(
   "/update-password/:id",
   authenticationTokenUser,
   validObjectId,
-  UserController.update
+  UserController.updatePassword
 );
 router.delete(
   "/delete/:id",

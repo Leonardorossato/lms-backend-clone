@@ -1,6 +1,10 @@
-const passwordMatchs = require("../middleware/password.match");
 const User = require("../models/users.model");
-const asyncHandler = require("express-async-handler");
+const {
+  passwordMatchs,
+  createPasswordResetToken,
+} = require("../middleware/password.match");
+require("dotenv").config();
+const PORT = process.env.PORT;
 class UserController {
   static update = async (req, res) => {
     try {
@@ -29,13 +33,11 @@ class UserController {
     }
   };
 
-  static updatePassword = asyncHandler(async (req, res) => {
-    const { _id } = req.user;
-    const password = req.body;
-
+  static updatePassword = async (req, res) => {
     try {
-      const user = await User.findById(_id);
-      if (user && passwordMatchs(password)) {
+      const { password } = req.body;
+      const user = await User.findById(req.params.id);
+      if (user && (await passwordMatchs(password))) {
         return res.status(400).json({
           message: "Please provide a new password instead of the old one.",
         });
@@ -49,7 +51,23 @@ class UserController {
     } catch (error) {
       return res.status(500).json({ message: "Error updating password" });
     }
-  });
+  };
+
+  static forgotPassword = async (req, res) => {
+    try {
+      const { email } = req.body;
+      const user = await User.findOne({ email: email });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: "User not exist with this email." });
+      }
+      const token = await createPasswordResetToken();
+      await user.save();
+      const resetLink = `http://localhost:${PORT}/api/users/reset-password/${token}`;
+      return res.status(200).json({ message: resetLink });
+    } catch (error) {}
+  };
 }
 
 module.exports = UserController;
