@@ -4,12 +4,16 @@ const { authenticationTokenUser } = require("../middleware/jwt.middleware");
 const validObjectId = require("../middleware/validate.middleware");
 const router = express.Router();
 
+router.post("/forgot-password", UserController.forgotPassword);
+
 router.put(
   "/update/:id",
   authenticationTokenUser,
   validObjectId,
   UserController.update
 );
+
+router.put("/reset-password/:token", UserController.resetPassword);
 
 router.put(
   "/update-password/:id",
