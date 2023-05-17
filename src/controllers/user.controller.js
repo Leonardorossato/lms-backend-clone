@@ -1,3 +1,4 @@
+const passwordMatchs = require("../middleware/password.match");
 const User = require("../models/users.model");
 const asyncHandler = require("express-async-handler");
 class UserController {
@@ -27,6 +28,28 @@ class UserController {
         .json({ message: `Error while deleting this user id: ${id}` });
     }
   };
+
+  static updatePassword = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const password = req.body;
+
+    try {
+      const user = await User.findById(_id);
+      if (user && passwordMatchs(password)) {
+        return res.status(400).json({
+          message: "Please provide a new password instead of the old one.",
+        });
+      } else {
+        user.password = password;
+        await user.save();
+        return res
+          .status(200)
+          .json({ message: "Password update successfully" });
+      }
+    } catch (error) {
+      return res.status(500).json({ message: "Error updating password" });
+    }
+  });
 }
 
 module.exports = UserController;
