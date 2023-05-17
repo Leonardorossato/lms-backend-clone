@@ -1,55 +1,85 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/users.model");
+const asyncHandler = require("express-async-handler");
 require("dotenv").config();
 const jwtSecret = process.env.JWT_SECRET;
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, jwtSecret);
-};
+function generateToken(user) {
+  const payload = {
+    _id: user._id,
+    roles: user.roles,
+  };
 
-const authMiddleware = async (req, res, next) => {
+  const token = jwt.sign(payload, jwtSecret, { expiresIn: "1h" });
+  return token;
+}
+
+const authenticationTokenUser = async (req, res, next) => {
   let token;
-  if (req.headers.authorization.startsWith("Bearer")) {
+  if (req.headers.authorization.startsWith("Bearer ")) {
     token = req.headers.authorization.split(" ")[1];
     try {
-      if (!token) {
-        return res.status(400).json({ message: "Access Denied. No token provided." });
-      } else {
+      if (token) {
         const decode = jwt.verify(token, jwtSecret);
-        const user = await User.findById(decode._id);
+        const user = await User.findOne({ id: decode._id });
         req.user = user;
-        next();
+        return next();
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Access Denied. No token provided." });
       }
     } catch (error) {
-      return res
-        .status(400)
-        .json("Not Authorized, Please Login again", error.message);
+      return res.status(400).json("Not Authorized, Please Login again");
     }
   }
 };
 
-const isAdmin = async (req, res, next) => {
-  try {
-    const { email } = req.user;
-    const isAdmin = await User.findOne({ email: email });
-    if (isAdmin.roles !== "admin") {
-      return res.status(403).json("You are not admin");
-    } else next();
-  } catch (error) {
-    return res.status(404).json("Error in user permission", error);
+const authenticationTokenAdmin = async (req, res, next) => {
+  let token;
+  if (req?.headers?.authorization?.startsWith("Bearer ")) {
+    token = req?.headers?.authorization?.split(" ")[1];
+    try {
+      if (token) {
+        const decode = jwt.verify(token, jwtSecret);
+        const user = await User.findOne({ id: decode._id });
+        req.user = user;
+        return next();
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Access Denied. No token provided." });
+      }
+    } catch (error) {
+      return res.status(400).json("Not Authorized, Please Login again");
+    }
   }
 };
 
-const isInstructor = async (req, res, next) => {
-  try {
-    const { email } = req.user;
-    const isAdmin = await User.findOne({ email: email });
-    if (isAdmin.roles !== "instructor") {
-      return res.status(403).json("You are not Instructor");
-    } else next();
-  } catch (error) {
-    return res.status(404).json("Error in user permission", error);
+const authenticationTokenInstructor = asyncHandler(async (req, res, next) => {
+  let token;
+  if (req.headers.authorization.startsWith("Bearer ")) {
+    token = req.headers.authorization.split(" ")[1];
+    try {
+      if (token) {
+        const decode = jwt.verify(token, jwtSecret);
+        const user = await User.findOne({ id: decode._id });
+        req.user = user;
+        return next();
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Access Denied. No token provided." });
+      }
+    } catch (error) {
+      return res.status(400).json("Not Authorized, Please Login again");
+    }
   }
-};
+});
 
-module.exports = { generateToken, authMiddleware, isAdmin, isInstructor };
+module.exports = {
+  authenticationTokenUser,
+  generateToken,
+  authenticationTokenAdmin,
+  authenticationTokenInstructor,
+};
