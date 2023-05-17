@@ -17,7 +17,7 @@ router.put(
   UserController.update
 );
 router.put(
-  "/password/:id",
+  "/update-password/:id",
   authenticationTokenUser,
   validObjectId,
   UserController.update
