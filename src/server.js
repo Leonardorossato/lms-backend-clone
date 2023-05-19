@@ -13,17 +13,13 @@ const userRouter = require("./routes/user.router");
 const authRouter = require("./routes/auth.router");
 const adminRouter = require("./routes/admin.router");
 const googleRouter = require("./routes/google.router");
+const passportStrategy = require("./strategy/passport.strategy");
 
 app.use(express.json());
-app.use(
-  cors({
-    origin: `https://localhost:${PORT}`,
-    methods: ['GET',  'POST', 'PUT', 'DELETE']
-  })
-);
+app.use(cors({ origin: "*" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
-  res.send(`<a href="http://localhost:7000/google">Login wiht Google</a>`);
+  res.send(`<a href="http://localhost:7000/google">Login with Google</a>`);
 });
 app.use(
   session({
@@ -39,7 +35,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 app.use("/api/users", userRouter);
 app.use("/api/admin", adminRouter);
