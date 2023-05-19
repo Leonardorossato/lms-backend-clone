@@ -1,18 +1,30 @@
 const passport = require("passport");
-const googleStratey = require("passport-google-oauth20").Strategy;
+const GoogleStratey = require("passport-google-oauth20").Strategy;
 const User = require("../models/users.model");
+require("dotenv").config();
+const clientID = process.env.OAUTH_CLIENT_ID;
+const clientSecret = process.env.OAUTH_CLIENT_SECRET;
 
 passport.use(
-  new googleStratey(
+  new GoogleStratey(
     {
-      clientId: "",
-      clientSecret: "",
-      callbackUrl: "",
+      clientID: clientID,
+      clientSecret: clientSecret,
+      callbackURL: "/auth/google/callback",
       scope: ["profile", "email"],
     },
-    async function (profile, done) {
-      console.log(profile);
-      return done(null, user);
+    async function (profile, cb) {
+      let data = profile?._json;
+      const user = await User.findOne({ email: data.email });
+      if (user) {
+        return cb(null, profile);
+      }else{
+        const newUser = await User.create({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email
+        })
+      }
     }
   )
 );
