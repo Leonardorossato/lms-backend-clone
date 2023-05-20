@@ -13,6 +13,7 @@ const userRouter = require("./routes/user.router");
 const authRouter = require("./routes/auth.router");
 const adminRouter = require("./routes/admin.router");
 const googleRouter = require("./routes/google.router");
+const tutorialCategoryRouter = require("./routes/tutorial.category.router");
 const passportStrategy = require("./strategy/passport.strategy");
 
 app.use(express.json());
@@ -42,6 +43,7 @@ app.use(passport.session());
 app.use("/api/users", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/tutorial-category", tutorialCategoryRouter);
 app.use("/", googleRouter);
 
 app.listen(mongoConnection);
