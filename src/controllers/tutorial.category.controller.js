@@ -44,17 +44,14 @@ class TutorialCategoryController {
 
   static update = async (req, res) => {
     try {
-      const category = await TutorialCategory.findById(req.params.id);
-      if (!category) {
+      const {id} = req.params;
+      const category = await TutorialCategory.findById(id);
+      if (!category._id) {
         return res
           .status(404)
           .json({ message: "TutorialCategory id not found" });
       }
-      await TutorialCategory.findByIdAndUpdate(
-        category,
-        { new: true },
-        req.body
-      );
+      await TutorialCategory.findByIdAndUpdate(id, req.body, { new: true });
       return res
         .status(200)
         .json({ message: "Tutorial Category updated successfully." });
