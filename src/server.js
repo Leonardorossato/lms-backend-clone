@@ -18,8 +18,11 @@ const passportStrategy = require("./strategy/passport.strategy");
 app.use(express.json());
 app.use(cors({ origin: "*" }));
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get("/", (req, res) => {
-  res.send(`<a href="http://localhost:7000/google">Login with Google</a>`);
+  res.send(
+    `<a href="http://localhost:${PORT}/google">Login with Google Account</a>`
+  );
 });
 app.use(
   session({
