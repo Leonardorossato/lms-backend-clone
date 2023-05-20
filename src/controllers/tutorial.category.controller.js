@@ -1,4 +1,4 @@
-const { default: slugify } = require("slugify");
+const slugify = require("slugify");
 const TutorialCategory = require("../models/tutorial.category.model");
 
 class TutorialCategoryController {
@@ -44,13 +44,17 @@ class TutorialCategoryController {
 
   static update = async (req, res) => {
     try {
-      const {id} = req.params;
+      const { id } = req.params;
+      if (req.body.title) {
+        req.body.slug = slugify(req.body.title);
+      }
       const category = await TutorialCategory.findById(id);
       if (!category._id) {
         return res
           .status(404)
           .json({ message: "TutorialCategory id not found" });
       }
+
       await TutorialCategory.findByIdAndUpdate(id, req.body, { new: true });
       return res
         .status(200)
