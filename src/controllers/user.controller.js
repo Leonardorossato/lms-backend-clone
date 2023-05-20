@@ -3,6 +3,7 @@ const passwordMatchs = require("../middleware/password.match");
 require("dotenv").config();
 const PORT = process.env.PORT;
 const crypto = require("crypto");
+const { sendEmail } = require("../email/email.controller");
 
 class UserController {
   static update = async (req, res) => {
@@ -64,6 +65,13 @@ class UserController {
       const token = await user.createPasswordResetToken();
       await user.save();
       const resetLink = `http://localhost:${PORT}/api/users/reset-password/${token}`;
+      let data = {
+        to: email,
+        text: `Hey user ${user.firstName + " " + user.lastName}`,
+        subject: "Forgot Password",
+        html: resetLink,
+      };
+      sendEmail(data);
       return res.status(200).json({ message: resetLink });
     } catch (error) {
       return res.status(500).json({ message: "Invalid email address" });
