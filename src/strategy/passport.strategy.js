@@ -10,20 +10,23 @@ passport.use(
     {
       clientID: clientID,
       clientSecret: clientSecret,
-      callbackURL: "/auth/google/callback",
+      callbackURL: "http://localhost:7000/auth/google/callback",
       scope: ["profile", "email"],
     },
-    async function (profile, cb) {
+    async function (accessToken, refreshToken, profile, cb) {
       let data = profile?._json;
       const user = await User.findOne({ email: data.email });
       if (user) {
-        return cb(null, profile);
-      }else{
+        return await cb(null, user);
+      } else {
         const newUser = await User.create({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email
-        })
+          firstName: data.name,
+          lastName: data.given_name,
+          email: data.email,
+          userImage: data.picture,
+          roles: "user",
+        });
+        return await cb(null, newUser);
       }
     }
   )
