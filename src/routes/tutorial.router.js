@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.post("/create", TutorialController.create);
 router.get("/all", TutorialController.findAll);
-router.get("/:type/:slug", validObjectId, TutorialController.getTutorial);
+router.get("/:type/:slug", TutorialController.getTutorial);
+router.put("/:id", validObjectId, TutorialController.update);
+router.delete("/:id", validObjectId, TutorialController.delete);
 
 module.exports = router;

@@ -43,5 +43,47 @@ class TutorialController {
       return response.status(500).json({ message: "Error to get tutorial" });
     }
   };
+
+  static update = async (req, res) => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return res
+          .status(404)
+          .json({ message: `Error to find tutorial with this id: ${id}` });
+      }
+      if (req.body.title) {
+        req.body.slug = slugify(req.body.title.toLowerCase());
+      }
+      if (req.body.tutorialCategory) {
+        req.body.tutorialCategorySlug = slugify(
+          req.body.tutorialCategory.toLowerCase()
+        );
+      }
+      await Tutorial.findByIdAndUpdate(id, req.body, { new: true });
+      return res
+        .status(200)
+        .json({ message: "Tutorial updated successfully." });
+    } catch (error) {
+      return res.status(400).json({ message: "Error updating tutorial" });
+    }
+  };
+
+  static delete = async (req, res) => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return res
+          .status(404)
+          .json({ message: `Error to find tutorial with this id: ${id}` });
+      }
+      await Tutorial.findByIdAndDelete(id);
+      return res
+        .status(200)
+        .json({ message: "Tutorial deleted successfully." });
+    } catch (error) {
+      return res.status(500).json({ message: "Error while deleting tutorial" });
+    }
+  };
 }
 module.exports = TutorialController;
