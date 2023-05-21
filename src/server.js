@@ -14,6 +14,7 @@ const authRouter = require("./routes/auth.router");
 const adminRouter = require("./routes/admin.router");
 const googleRouter = require("./routes/google.router");
 const tutorialCategoryRouter = require("./routes/tutorial.category.router");
+const tutorialRouter = require("./routes/tutorial.router");
 const passportStrategy = require("./strategy/passport.strategy");
 
 app.use(express.json());
@@ -44,6 +45,7 @@ app.use("/api/users", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/tutorial-category", tutorialCategoryRouter);
+app.use("/api/tutorial", tutorialRouter);
 app.use("/", googleRouter);
 
 app.listen(mongoConnection);
