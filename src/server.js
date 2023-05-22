@@ -16,6 +16,7 @@ const googleRouter = require("./routes/google.router");
 const tutorialCategoryRouter = require("./routes/tutorial.category.router");
 const tutorialRouter = require("./routes/tutorial.router");
 const newLettersRouter = require("./routes/news.letter.router");
+const reviewRouter = require("./routes/review.router");
 const passportStrategy = require("./strategy/passport.strategy");
 
 app.use(express.json());
@@ -48,6 +49,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/tutorial-category", tutorialCategoryRouter);
 app.use("/api/tutorial", tutorialRouter);
 app.use("/api/newsletters", newLettersRouter);
+app.use("/api/review", reviewRouter);
 app.use("/", googleRouter);
 
 app.listen(mongoConnection);
