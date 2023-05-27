@@ -1,11 +1,12 @@
-const validObjectId = require("../middleware/validate.middleware");
+const expressAsyncHandler = require("express-async-handler");
 const Review = require("../models/review.model");
+const validObjectId = require("../middleware/validate.middleware");
 
 class ReviewController {
-  static create = async (req, res) => {
+  static create = expressAsyncHandler(async (req, res) => {
     const { _id } = req.user;
+    validObjectId(_id);
     try {
-      validObjectId(_id);
       let data = {
         user: _id,
         comment: req.body.comment,
@@ -13,11 +14,11 @@ class ReviewController {
       };
       const review = await Review.create(data);
       await review.save();
-      return res.status(200).json(data);
+      return res.status(200).json(review);
     } catch (error) {
       return res.status(400).json({ message: "Error creating a user review" });
     }
-  };
+  });
 
   static findAll = async (req, res) => {};
 

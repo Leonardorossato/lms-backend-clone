@@ -20,7 +20,12 @@ const reviewRouter = require("./routes/review.router");
 const passportStrategy = require("./strategy/passport.strategy");
 
 app.use(express.json());
-app.use(cors({ origin: "*" }));
+app.use(
+  cors({
+    origin: `http://localhost:${PORT}`,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {

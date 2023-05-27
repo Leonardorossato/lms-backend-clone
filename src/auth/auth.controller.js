@@ -1,9 +1,10 @@
-const { generateToken } = require("../middleware/jwt.middleware");
+const expressAsyncHandler = require("express-async-handler");
 const passwordMatchs = require("../middleware/password.match");
 const User = require("../models/users.model");
+const { generateToken } = require("../middleware/jwt.middleware");
 
 class AuthController {
-  static login = async (req, res) => {
+  static login = expressAsyncHandler(async (req, res) => {
     try {
       const user = await User.findOne({ email: req.body.email });
       if (!user) {
@@ -15,9 +16,9 @@ class AuthController {
       let token = generateToken(user);
       return res.status(201).json({ token: token, roles: user.roles });
     } catch (error) {
-      return res.status(404).json("Email or password not match", error.message);
+      return res.status(404).json({ message: "Email or password not match" });
     }
-  };
+  });
 
   static register = async (req, res) => {
     try {
