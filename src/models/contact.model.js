@@ -8,9 +8,10 @@ const contactSchema = new mongoose.Schema(
     subject: { type: String, required: true },
     profession: { type: String, required: true },
     comment: { type: String, required: true },
+    status: { type: String, default: "Submitted", required: false },
   },
   { timestamps: true }
 );
 
-const Contact = mongoose.model("ontact", contactSchema);
+const Contact = mongoose.model("contact", contactSchema);
 module.exports = Contact;
