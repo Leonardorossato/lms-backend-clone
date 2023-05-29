@@ -20,6 +20,7 @@ const reviewRouter = require("./routes/review.router");
 const contactRouter = require("./routes/contact.router");
 const videoRouter = require("./routes/video.router");
 const documentRouter = require("./routes/document.router");
+const documentCategoryRouter = require("./routes/document.caterory.router");
 const passportStrategy = require("./strategy/passport.strategy");
 
 app.use(express.json());
@@ -61,6 +62,7 @@ app.use("/api/review", reviewRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/video", videoRouter);
 app.use("/api/document", documentRouter);
+app.use("/api/document-category", documentCategoryRouter);
 app.use("/", googleRouter);
 
 app.listen(mongoConnection);
